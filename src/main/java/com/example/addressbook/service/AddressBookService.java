@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class AddressBookService {
 
     private final List<AddressBookEntry> addressBookEntries = new ArrayList<>();
+    private final AtomicLong idGenerator = new AtomicLong(1);
 
     public List<AddressBookEntry> getAllContacts() {
         return addressBookEntries;
@@ -24,7 +26,11 @@ public class AddressBookService {
     }
 
     public AddressBookEntry addContact(AddressBookDTO dto) {
-        AddressBookEntry entry = new AddressBookEntry(dto.getName(), dto.getPhoneNumber(), dto.getEmail());
+        AddressBookEntry entry = new AddressBookEntry();
+        entry.setId(idGenerator.getAndIncrement());
+        entry.setName(dto.getName());
+        entry.setPhoneNumber(dto.getPhoneNumber());
+        entry.setEmail(dto.getEmail());
         addressBookEntries.add(entry);
         return entry;
     }
